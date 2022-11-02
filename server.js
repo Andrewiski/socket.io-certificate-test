@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
       debug("io.onConnection", socket.id, "socket.client.conn.request.socket.authorized is false");
     }
     
-    
+    //This always returns null socket.request.client.getPeerCertificate()
     if(socket.request.client.getPeerCertificate) {
       let cert = socket.request.client.getPeerCertificate();
       if (cert){
@@ -36,15 +36,6 @@ io.on('connection', (socket) => {
       }
     }
 
-
-    if(socket.client.conn.request.socket.getPeerCertificate) {
-      let cert = socket.client.conn.request.socket.getPeerCertificate();
-      if (cert){
-        debug("io.onConnection", socket.id, "socket.client.conn.request.socket.getPeerCertificate() client certificate was presented use,", cert.subject.CN, " issued by ", cert.issuer.CN );
-      }else{
-        debug("io.onConnection", socket.id, "socket.client.conn.request.socket.getPeerCertificate() is null");
-      }
-    }
     //This only successfull if running @Andrewiski/socket.io
     if(socket.client.peerCertificate) {
       let cert = socket.client.peerCertificate;
