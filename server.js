@@ -5,8 +5,8 @@ const path = require('path');
 const https = require('https');
 const fs = require('fs');
 const debug = require('debug')("server");
-const socketio = require('@andrewiski/socket.io');
-//const socketio = require('socket.io');
+//const socketio = require('@andrewiski/socket.io');
+const socketio = require('socket.io');
 const port = process.env.PORT || 3000;
 
 const caCertFile = path.join(__dirname, 'ca.cert.pem');
@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
       if (cert){
         debug("io.onConnection", socket.id, "socket.request.client.getPeerCertificate() client certificate was presented use,", cert.subject.CN, " issued by ", cert.issuer.CN );
       }else{
-        debug("io.onConnection", socket.id, "socket.request.client.getPeerCertificate is null");
+        debug("io.onConnection", socket.id, "socket.request.client.getPeerCertificate() is null");
       }
     }
 
