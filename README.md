@@ -1,34 +1,26 @@
 
-# Socket.IO Chat Client Certificates
+# Socket.IO Certificate Test
 
-A simple chat demo for Socket.IO using client certificates
+A simple Socket.IO using client certificates highlighting getpeercertificate() === null bug
 
 ## How to use
 ### start server.js
 ```
 $ npm i
-$ node server.js
+$ npm run winserver
 ```
-And point your browser to `https://localhost:3000`
-
-Optionally, specify a port by supplying the `PORT` env variable.
-
 ### start client.js that connects to server as a echo bot
 ```
 $ npm i
-$ node client.js
+$ npm run winclient
 ```
-Optionally, specify a port by supplying the `PORT` env variable.
 
+## Toggle Between Andrewiski/socket.io and socket.io in server.js
+```
 
+const socketio = require('@andrewiski/socket.io');
 
+const socketio = require('socket.io');
 
+```
 
-
-## Features
-
-- Multiple users can join a chat room by each entering a unique username
-on website load.
-- Users can type chat messages to the chat room.
-- A notification is sent to all users when a user joins or leaves
-the chatroom.

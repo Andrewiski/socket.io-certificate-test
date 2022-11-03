@@ -6,15 +6,21 @@
   "author": "Andrew DeVries",
   "private": false,
   "license": "BSD",
+  "engines" : { 
+    "npm" : ">=8.0.0",
+    "node" : ">=16.0.0"
+  },
   "dependencies": {
     "deferred": "^0.7.11",
     "express": "~4.17.1",
     "extend": "^3.0.2",
-    "@andrewiski/socket.io": "^4.4.1",
+    "@andrewiski/socket.io": "4.5.3",
     "socket.io": "4.5.3",
     "socket.io-client": "4.5.3"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "winserver": "set DEBUG=server && node server.js",
+    "winclient": "set DEBUG=client && node client.js"
   }
 }
