@@ -1,7 +1,7 @@
 
 # Socket.IO Certificate Test
 
-A simple Socket.IO using client certificates highlighting getpeercertificate() === null bug
+A simple Socket.IO using client certificates highlighting getpeercertificate() === null and the updated io.engine.on("connection" method that fixes it.
 
 ## How to use
 ### start server.js
@@ -15,12 +15,4 @@ $ npm i
 $ npm run winclient
 ```
 
-## Toggle Between Andrewiski/socket.io and socket.io in server.js
-```
-
-const socketio = require('@andrewiski/socket.io');
-
-const socketio = require('socket.io');
-
-```
 

@@ -5,7 +5,7 @@ const path = require('path');
 const https = require('https');
 const fs = require('fs');
 const debug = require('debug')("server");
-//const socketio = require('@andrewiski/socket.io');
+
 const socketio = require('socket.io');
 const port = process.env.PORT || 3000;
 
@@ -17,6 +17,9 @@ const serverCertFile = path.join(__dirname, 'ca.cert.pem');
 
 const io = socketio();
 
+
+
+
 io.on('connection', (socket) => {
   try{
     
@@ -25,6 +28,13 @@ io.on('connection', (socket) => {
     }else{
       debug("io.onConnection", socket.id, "socket.client.conn.request.socket.authorized is false");
     }
+
+    if(socket.conn.peerCertificate){   //This only works if io.engine.on("connection") assigns the certificate to peerCertificate see below
+      let cert = socket.conn.peerCertificate;
+      debug("io.onConnection", socket.id, "socket.conn.peerCertificate", cert.subject.CN, " issued by ", cert.issuer.CN );
+    }else{
+      debug("io.onConnection", socket.id, "socket.conn.peerCertificate is null");
+    }
     
     //This always returns null socket.request.client.getPeerCertificate()
     if(socket.request.client.getPeerCertificate) {
@@ -32,19 +42,11 @@ io.on('connection', (socket) => {
       if (cert){
         debug("io.onConnection", socket.id, "socket.request.client.getPeerCertificate() client certificate was presented use,", cert.subject.CN, " issued by ", cert.issuer.CN );
       }else{
-        debug("io.onConnection", socket.id, "socket.request.client.getPeerCertificate() is null");
+        debug("io.onConnection", socket.id, "socket.request.client.getPeerCertificate() is null this is expected in newer versions of Node.js and socket.io");
       }
     }
 
-    //This only successfull if running @Andrewiski/socket.io
-    if(socket.client.peerCertificate) {
-      let cert = socket.client.peerCertificate;
-      if (cert){
-        debug("io.onConnection", socket.id, "Andrewiski socket.client.peerCertificate certificate was presented use,", cert.subject.CN, " issued by ", cert.issuer.CN );
-      }else{
-        debug("io.onConnection", socket.id, "no client.peerCertificate certificate");
-      }
-    } 
+    
     // when the client emits 'new message', this listens and executes
     socket.on('new message', (data) => {
       // we tell the client to execute 'new message'
@@ -68,6 +70,27 @@ var httpsOptions = {
 };
 const server = https.createServer(httpsOptions, app);
 io.attach(server);
+//This has to come after the server is attached else io.engine is undefined
+io.engine.on('connection', (rawsocket) => {
+  try{
+
+    //This always returns null socket.request.client.getPeerCertificate()
+    if(rawsocket.request.client.getPeerCertificate) {
+      let cert = rawsocket.request.client.getPeerCertificate();
+      rawsocket.peerCertificate = cert;   //this will make the certificate availble in //io.on("connection", (socket) =>   at socket.conn.peerCertificate 
+      if (cert){
+        debug("io.engine.onConnection", rawsocket.id, "rawsocket.request.client.getPeerCertificate() client certificate was presented use,", cert.subject.CN, " issued by ", cert.issuer.CN );
+      }else{
+        debug("io.engine.onConnection", rawsocket.id, "rawsocket.request.client.getPeerCertificate() is null");
+      }
+    }
+
+    
+  }catch(ex){
+    debug("io.engine.onConnection", rawsocket.id, "error", ex);
+  }
+});
+
 server.listen(port, () => {
   console.log('Server listening at port %d for https', port);
 });
