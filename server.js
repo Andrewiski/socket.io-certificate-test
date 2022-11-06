@@ -74,7 +74,7 @@ io.attach(server);
 io.engine.on('connection', (rawsocket) => {
   try{
 
-    //This always returns null socket.request.client.getPeerCertificate()
+    
     if(rawsocket.request.client.getPeerCertificate) {
       let cert = rawsocket.request.client.getPeerCertificate();
       rawsocket.peerCertificate = cert;   //this will make the certificate availble in //io.on("connection", (socket) =>   at socket.conn.peerCertificate 
